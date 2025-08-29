@@ -1,0 +1,34 @@
+import Header from "@/components/Header";
+import Hero from "@/components/Hero";
+import Categories from "@/components/Categories";
+import ProductShowcase from "@/components/ProductShowcase";
+import Features from "@/components/Features";
+import Brands from "@/components/Brands";
+import Testimonials from "@/components/Testimonials";
+import Newsletter from "@/components/Newsletter";
+import Footer from "@/components/Footer";
+import SEOLayout from "./SEOLayout";
+
+const Index = () => {
+  return (
+    <SEOLayout
+      title="Home"
+      description="Discover luxury perfumes and beauty products at Luxe Scent Emporium. Premium designer fragrances, exclusive collections, and exceptional quality."
+      keywords="luxury perfumes, designer fragrances, beauty products, exclusive perfumes, premium cosmetics, luxury scents"
+    >
+      <main className="min-h-screen bg-background">
+        <Header />
+        <Hero />
+        <Categories />
+        <ProductShowcase />
+        <Features />
+        <Brands />
+        <Testimonials />
+        <Newsletter />
+        <Footer />
+      </main>
+    </SEOLayout>
+  );
+};
+
+export default Index;
