@@ -9,12 +9,18 @@ import { useCart } from "@/contexts/CartContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEOLayout from "./SEOLayout";
+import DiscountCode from "@/components/DiscountCode";
 import { useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 
 const Checkout = () => {
   const { state, getTotalPrice, clearCart } = useCart();
   const [paymentMethod, setPaymentMethod] = useState("card");
+  const [discount, setDiscount] = useState<{
+    code: string;
+    amount: number;
+    type: "percentage" | "fixed";
+  } | null>(null);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
@@ -30,6 +36,17 @@ const Checkout = () => {
     cvv: "",
     nameOnCard: "",
   });
+
+  const subtotal = getTotalPrice();
+  const discountAmount = discount
+    ? discount.type === "percentage"
+      ? subtotal * (discount.amount / 100)
+      : discount.amount
+    : 0;
+  const discountedSubtotal = subtotal - discountAmount;
+  const shipping = discountedSubtotal > 100 ? 0 : 15;
+  const tax = discountedSubtotal * 0.08;
+  const total = discountedSubtotal + shipping + tax;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({
@@ -323,23 +340,41 @@ const Checkout = () => {
                 ))}
               </div>
 
-              <div className="space-y-3 border-t pt-4">
-                <div className="flex justify-between">
-                  <span>Subtotal</span>
-                  <span>${getTotalPrice().toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Shipping</span>
-                  <span>Free</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Tax</span>
-                  <span>${(getTotalPrice() * 0.08).toFixed(2)}</span>
-                </div>
-                <div className="border-t pt-3">
-                  <div className="flex justify-between font-bold text-lg">
-                    <span>Total</span>
-                    <span>${(getTotalPrice() * 1.08).toFixed(2)}</span>
+              <div className="space-y-4 border-t pt-4">
+                <DiscountCode
+                  onApplyDiscount={setDiscount}
+                  appliedDiscount={discount}
+                  onRemoveDiscount={() => setDiscount(null)}
+                />
+
+                <Separator />
+
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span>Subtotal</span>
+                    <span>${subtotal.toFixed(2)}</span>
+                  </div>
+                  {discount && (
+                    <div className="flex justify-between text-green-600">
+                      <span>Discount ({discount.code})</span>
+                      <span>-${discountAmount.toFixed(2)}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between">
+                    <span>Shipping</span>
+                    <span>
+                      {shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Tax</span>
+                    <span>${tax.toFixed(2)}</span>
+                  </div>
+                  <div className="border-t pt-3">
+                    <div className="flex justify-between font-bold text-lg">
+                      <span>Total</span>
+                      <span>${total.toFixed(2)}</span>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -73,13 +73,57 @@ const Header = () => {
             </Button>
 
             {/* User */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="hidden sm:flex hover:bg-luxury-purple/10"
-            >
-              <User className="h-5 w-5 text-luxury-purple" />
-            </Button>
+            <div className="relative group hidden sm:block">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="hover:bg-luxury-purple/10"
+              >
+                <User className="h-5 w-5 text-luxury-purple" />
+              </Button>
+
+              {/* User dropdown menu */}
+              <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="py-2">
+                  {localStorage.getItem("isAuthenticated") ? (
+                    <>
+                      <button
+                        onClick={() => navigate("/account")}
+                        className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 transition-colors"
+                      >
+                        My Account
+                      </button>
+                      <button
+                        onClick={() => {
+                          localStorage.removeItem("isAuthenticated");
+                          localStorage.removeItem("userEmail");
+                          localStorage.removeItem("userName");
+                          navigate("/");
+                        }}
+                        className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 transition-colors text-red-600"
+                      >
+                        Logout
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        onClick={() => navigate("/login")}
+                        className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 transition-colors"
+                      >
+                        Sign In
+                      </button>
+                      <button
+                        onClick={() => navigate("/register")}
+                        className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 transition-colors"
+                      >
+                        Create Account
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
 
             {/* Cart */}
             <Button
@@ -151,14 +195,50 @@ const Header = () => {
                         <Heart className="h-5 w-5" />
                         Wishlist
                       </Link>
-                      <Link
-                        to="/account"
-                        className="flex items-center gap-3 py-3 px-4 text-foreground hover:text-luxury-purple hover:bg-luxury-purple/5 rounded-lg transition-colors"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        <User className="h-5 w-5" />
-                        My Account
-                      </Link>
+                      {localStorage.getItem("isAuthenticated") ? (
+                        <>
+                          <Link
+                            to="/account"
+                            className="flex items-center gap-3 py-3 px-4 text-foreground hover:text-luxury-purple hover:bg-luxury-purple/5 rounded-lg transition-colors"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            <User className="h-5 w-5" />
+                            My Account
+                          </Link>
+                          <button
+                            onClick={() => {
+                              localStorage.removeItem("isAuthenticated");
+                              localStorage.removeItem("userEmail");
+                              localStorage.removeItem("userName");
+                              setIsMobileMenuOpen(false);
+                              navigate("/");
+                            }}
+                            className="flex items-center gap-3 py-3 px-4 w-full text-left text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                          >
+                            <User className="h-5 w-5" />
+                            Logout
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <Link
+                            to="/login"
+                            className="flex items-center gap-3 py-3 px-4 text-foreground hover:text-luxury-purple hover:bg-luxury-purple/5 rounded-lg transition-colors"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            <User className="h-5 w-5" />
+                            Sign In
+                          </Link>
+                          <Link
+                            to="/register"
+                            className="flex items-center gap-3 py-3 px-4 text-foreground hover:text-luxury-purple hover:bg-luxury-purple/5 rounded-lg transition-colors"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            <User className="h-5 w-5" />
+                            Create Account
+                          </Link>
+                        </>
+                      )}
                     </div>
                   </nav>
                 </div>

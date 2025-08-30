@@ -405,6 +405,82 @@ export const demoProducts: Product[] = [
     created_at: "2024-01-01T00:00:00Z",
     updated_at: "2024-01-01T00:00:00Z",
   },
+  // Add some beauty products for the beauty category
+  {
+    id: "17",
+    name: "Advanced Night Repair Serum",
+    description:
+      "Powerful anti-aging serum with hyaluronic acid and peptides for overnight skin renewal.",
+    price: 125,
+    brand: "Estée Lauder",
+    category: "beauty",
+    image_url:
+      "https://images.unsplash.com/photo-1596755389378-c31d21fd1273?w=400&h=400&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1596755389378-c31d21fd1273?w=400&h=400&fit=crop",
+    ],
+    in_stock: true,
+    stock_quantity: 45,
+    rating: 4.8,
+    review_count: 234,
+    tags: ["skincare", "anti-aging", "serum"],
+    is_featured: false,
+    is_new: false,
+    is_best_seller: true,
+    is_trending: false,
+    created_at: "2024-01-01T00:00:00Z",
+    updated_at: "2024-01-01T00:00:00Z",
+  },
+  {
+    id: "18",
+    name: "Miracle Foundation",
+    description:
+      "Full coverage foundation with SPF 25. Natural finish that lasts all day.",
+    price: 48,
+    brand: "Lancôme",
+    category: "beauty",
+    image_url:
+      "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400&h=400&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400&h=400&fit=crop",
+    ],
+    in_stock: true,
+    stock_quantity: 67,
+    rating: 4.5,
+    review_count: 156,
+    tags: ["makeup", "foundation", "coverage"],
+    is_featured: false,
+    is_new: true,
+    is_best_seller: false,
+    is_trending: false,
+    created_at: "2024-01-01T00:00:00Z",
+    updated_at: "2024-01-01T00:00:00Z",
+  },
+  {
+    id: "19",
+    name: "Lip Glow Oil",
+    description:
+      "Nourishing lip oil with cherry extract for natural-looking shine and hydration.",
+    price: 38,
+    brand: "Dior",
+    category: "beauty",
+    image_url:
+      "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=400&h=400&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=400&h=400&fit=crop",
+    ],
+    in_stock: true,
+    stock_quantity: 89,
+    rating: 4.6,
+    review_count: 98,
+    tags: ["lip care", "hydrating", "natural"],
+    is_featured: false,
+    is_new: false,
+    is_best_seller: false,
+    is_trending: true,
+    created_at: "2024-01-01T00:00:00Z",
+    updated_at: "2024-01-01T00:00:00Z",
+  },
 ];
 
 export const demoCategories: Category[] = [
