@@ -1,6 +1,15 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { User, Package, Heart, Settings, LogOut, Edit2 } from "lucide-react";
+import {
+  User,
+  Package,
+  Heart,
+  Settings,
+  LogOut,
+  Edit2,
+  ShoppingBag,
+  Star,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,12 +22,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
+import { useWishlist } from "@/contexts/WishlistContext";
+import { useCart } from "@/contexts/CartContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEOLayout from "@/pages/SEOLayout";
 
 const Account = () => {
   const navigate = useNavigate();
+  const { state: wishlistState, removeFromWishlist } = useWishlist();
+  const { addToCart } = useCart();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userInfo, setUserInfo] = useState({
     name: "John Doe",
@@ -248,25 +261,111 @@ const Account = () => {
             <TabsContent value="wishlist">
               <Card>
                 <CardHeader>
-                  <CardTitle>My Wishlist</CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    <Heart className="h-5 w-5" />
+                    My Wishlist ({wishlistState.items.length})
+                  </CardTitle>
                   <CardDescription>
                     Save your favorite fragrances for later
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-center py-8">
-                    <Heart className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                    <p className="text-muted-foreground">
-                      Your wishlist is empty. Start adding your favorite
-                      fragrances!
-                    </p>
-                    <Button
-                      className="mt-4"
-                      onClick={() => navigate("/products")}
-                    >
-                      Browse Products
-                    </Button>
-                  </div>
+                  {wishlistState.items.length === 0 ? (
+                    <div className="text-center py-8">
+                      <Heart className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                      <p className="text-muted-foreground">
+                        Your wishlist is empty. Start adding your favorite
+                        fragrances!
+                      </p>
+                      <Button
+                        className="mt-4"
+                        onClick={() => navigate("/products")}
+                      >
+                        Browse Products
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {wishlistState.items.map((item) => (
+                        <Card
+                          key={item.id}
+                          className="overflow-hidden hover:shadow-lg transition-shadow"
+                        >
+                          <div
+                            className="aspect-square bg-luxury-cream cursor-pointer overflow-hidden"
+                            onClick={() =>
+                              navigate(`/product/${item.product.id}`)
+                            }
+                          >
+                            <img
+                              src={item.product.image_url}
+                              alt={item.product.name}
+                              className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                            />
+                          </div>
+                          <CardContent className="p-4">
+                            <div className="space-y-2">
+                              <p className="text-sm text-luxury-purple font-medium">
+                                {item.product.brand}
+                              </p>
+                              <h3 className="font-semibold text-sm leading-tight line-clamp-2">
+                                {item.product.name}
+                              </h3>
+
+                              {/* Rating */}
+                              <div className="flex items-center gap-1">
+                                {[...Array(5)].map((_, i) => (
+                                  <Star
+                                    key={i}
+                                    className={`h-3 w-3 ${
+                                      i < Math.floor(item.product.rating)
+                                        ? "fill-yellow-400 text-yellow-400"
+                                        : "text-gray-300"
+                                    }`}
+                                  />
+                                ))}
+                                <span className="text-xs text-muted-foreground ml-1">
+                                  ({item.product.review_count})
+                                </span>
+                              </div>
+
+                              <div className="flex items-center justify-between">
+                                <span className="font-bold text-luxury-purple">
+                                  ${item.product.price}
+                                </span>
+                                {item.product.original_price && (
+                                  <span className="text-sm text-muted-foreground line-through">
+                                    ${item.product.original_price}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+
+                            <div className="flex gap-2 mt-4">
+                              <Button
+                                size="sm"
+                                className="flex-1 bg-gradient-luxury text-xs"
+                                onClick={() => addToCart(item.product)}
+                              >
+                                <ShoppingBag className="h-3 w-3 mr-1" />
+                                Add to Cart
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() =>
+                                  removeFromWishlist(item.product.id)
+                                }
+                                className="text-destructive hover:bg-destructive/10"
+                              >
+                                <Heart className="h-3 w-3 fill-current" />
+                              </Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </TabsContent>

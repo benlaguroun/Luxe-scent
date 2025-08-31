@@ -1,14 +1,17 @@
 import { Search, ShoppingBag, User, Heart, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
 import { useCart } from "@/contexts/CartContext";
+import { useWishlist } from "@/contexts/WishlistContext";
 import { Link, useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { getTotalItems } = useCart();
+  const { getWishlistCount } = useWishlist();
   const navigate = useNavigate();
 
   const navigationItems = [
@@ -67,9 +70,15 @@ const Header = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="hidden sm:flex hover:bg-luxury-purple/10"
+              className="hidden sm:flex hover:bg-luxury-purple/10 relative"
+              onClick={() => navigate("/wishlist")}
             >
               <Heart className="h-5 w-5 text-luxury-purple" />
+              {getWishlistCount() > 0 && (
+                <Badge className="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-luxury-purple text-white text-xs p-0 flex items-center justify-center">
+                  {getWishlistCount()}
+                </Badge>
+              )}
             </Button>
 
             {/* User */}

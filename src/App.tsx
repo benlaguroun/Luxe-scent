@@ -14,6 +14,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Account from "./pages/Account";
 import { HelmetProvider } from "react-helmet-async";
+import { WishlistProvider } from "@/contexts/WishlistContext";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,25 +23,27 @@ const App = () => (
   <ErrorBoundary>
     <QueryClientProvider client={queryClient}>
       <CartProvider>
-        <TooltipProvider>
-          {/* <Toaster /> */}
-          <Sonner />
-          <HelmetProvider>
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/products" element={<Products />} />
-                <Route path="/product/:id" element={<ProductDetail />} />
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/checkout" element={<Checkout />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/account" element={<Account />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </BrowserRouter>
-          </HelmetProvider>
-        </TooltipProvider>
+        <WishlistProvider>
+          <TooltipProvider>
+            {/* <Toaster /> */}
+            <Sonner />
+            <HelmetProvider>
+              <BrowserRouter>
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/products" element={<Products />} />
+                  <Route path="/product/:id" element={<ProductDetail />} />
+                  <Route path="/cart" element={<Cart />} />
+                  <Route path="/checkout" element={<Checkout />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/register" element={<Register />} />
+                  <Route path="/account" element={<Account />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </BrowserRouter>
+            </HelmetProvider>
+          </TooltipProvider>
+        </WishlistProvider>
       </CartProvider>
     </QueryClientProvider>
   </ErrorBoundary>

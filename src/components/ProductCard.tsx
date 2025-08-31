@@ -2,7 +2,9 @@ import { Heart, ShoppingBag, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/contexts/CartContext";
+import { useWishlist } from "@/contexts/WishlistContext";
 import { Product } from "@/types/database";
+import { useNavigate } from "react-router-dom";
 
 interface ProductCardProps {
   id?: string;
@@ -34,6 +36,8 @@ const ProductCard = ({
   product,
 }: ProductCardProps) => {
   const { addToCart } = useCart();
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+  const navigate = useNavigate();
 
   const handleAddToCart = () => {
     if (product) {
@@ -65,8 +69,53 @@ const ProductCard = ({
       addToCart(demoProduct);
     }
   };
+
+  const handleCardClick = () => {
+    const productId = product?.id || id || Date.now().toString();
+    navigate(`/product/${productId}`);
+  };
+
+  const handleWishlistClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    const currentProduct = product || {
+      id: id || Date.now().toString(),
+      name,
+      brand,
+      price,
+      original_price: originalPrice,
+      image_url: image,
+      images: [image],
+      description: `${brand} ${name}`,
+      category: "perfumes",
+      rating,
+      review_count: reviews,
+      is_new: isNew,
+      is_best_seller: isBestSeller,
+      is_trending: isTrending,
+      is_featured: false,
+      in_stock: true,
+      stock_quantity: 10,
+      tags: [],
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+
+    if (isInWishlist(currentProduct.id)) {
+      removeFromWishlist(currentProduct.id);
+    } else {
+      addToWishlist(currentProduct);
+    }
+  };
+
+  const productId = product?.id || id || Date.now().toString();
+  const isWishlisted = isInWishlist(productId);
+
   return (
-    <div className="group bg-white rounded-2xl shadow-card hover-lift p-4 sm:p-6 relative overflow-hidden">
+    <div
+      onClick={handleCardClick}
+      className="group bg-white rounded-2xl shadow-card hover-lift p-4 sm:p-6 relative overflow-hidden cursor-pointer"
+    >
       {/* Tags */}
       <div className="absolute top-3 left-3 sm:top-4 sm:left-4 z-10 flex flex-col gap-2">
         {isNew && <Badge className="bg-luxury-rose-gold text-white">New</Badge>}
@@ -83,9 +132,14 @@ const ProductCard = ({
         variant="ghost"
         size="icon"
         className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10 bg-white/80 hover:bg-white transition-luxury min-h-[44px] min-w-[44px] sm:min-h-[auto] sm:min-w-[auto]"
-        aria-label="Add to wishlist"
+        onClick={handleWishlistClick}
+        aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
       >
-        <Heart className="h-4 w-4 text-luxury-purple" />
+        <Heart
+          className={`h-4 w-4 text-luxury-purple transition-colors ${
+            isWishlisted ? "fill-luxury-purple" : ""
+          }`}
+        />
       </Button>
 
       {/* Product Image */}
@@ -139,7 +193,10 @@ const ProductCard = ({
           <Button
             size="sm"
             className="bg-gradient-luxury hover:shadow-luxury transition-luxury min-h-[44px] text-sm sm:text-base"
-            onClick={handleAddToCart}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleAddToCart();
+            }}
             aria-label={`Add ${name} to cart`}
           >
             <ShoppingBag className="h-4 w-4 mr-2" />

@@ -5,6 +5,7 @@ import ProductShowcase from "@/components/ProductShowcase";
 import Features from "@/components/Features";
 import Brands from "@/components/Brands";
 import Testimonials from "@/components/Testimonials";
+import SocialMedia from "@/components/SocialMedia";
 import Newsletter from "@/components/Newsletter";
 import Footer from "@/components/Footer";
 import SEOLayout from "./SEOLayout";
@@ -24,6 +25,7 @@ const Index = () => {
         <Features />
         <Brands />
         <Testimonials />
+        <SocialMedia />
         <Newsletter />
         <Footer />
       </main>
